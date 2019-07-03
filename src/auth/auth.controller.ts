@@ -3,10 +3,13 @@ import {
   Post,
   Body,
   ValidationPipe,
-  UnauthorizedException
+  UnauthorizedException,
+  UseGuards,
+  Req
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthCredentialsDto } from './dto/auth-credentials.dto'
+import { AuthGuard } from '@nestjs/passport'
 
 @Controller('auth')
 export class AuthController {
@@ -23,11 +26,13 @@ export class AuthController {
   @Post('signin')
   async signIn(
     @Body(ValidationPipe) authCredentialsDto: AuthCredentialsDto
-  ): Promise<any> {
-    const userName = await this.authService.signIn(authCredentialsDto)
+  ): Promise<{ accessToken: string }> {
+    return await this.authService.signIn(authCredentialsDto)
+  }
 
-    if (!userName) throw new UnauthorizedException('Invalid credentials')
-
-    return { message: 'success' }
+  @Post('test')
+  @UseGuards(AuthGuard())
+  test(@Req() req) {
+    return console.log(req)
   }
 }
