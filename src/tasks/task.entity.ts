@@ -5,10 +5,13 @@ import { TaskStatus } from './task-status.enum'
 export class TaskEntity extends BaseEntity {
   @PrimaryGeneratedColumn()
   id: string
+
   @Column()
   title: string
+
   @Column()
   description: string
+
   @Column()
   status: TaskStatus
 }
