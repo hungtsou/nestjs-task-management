@@ -3,7 +3,8 @@ import {
   Post,
   Body,
   ValidationPipe,
-  UseGuards
+  UseGuards,
+  Logger
 } from '@nestjs/common'
 import { AuthService } from './auth.service'
 import { AuthCredentialsDto } from './dto/auth-credentials.dto'
@@ -14,6 +15,8 @@ import { UserEntity } from './user.entity'
 @Controller('auth')
 export class AuthController {
   constructor(private authService: AuthService) {}
+
+  private logger = new Logger('AuthController')
 
   @Post('signup')
   async signUp(
@@ -33,6 +36,6 @@ export class AuthController {
   @Post('test')
   @UseGuards(AuthGuard())
   test(@GetUser() user: UserEntity) {
-    return console.log(user)
+    this.logger.verbose('Testing guard endpoint with auth')
   }
 }

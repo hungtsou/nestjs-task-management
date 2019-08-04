@@ -4,9 +4,12 @@ import CreateTaskDto from './dto/create-task.dto'
 import { TaskStatus } from './task-status.enum'
 import { GetTasksFilterDto } from './dto/get-tasks-filter.dto'
 import { UserEntity } from '../auth/user.entity'
+import { Logger, InternalServerErrorException } from '@nestjs/common'
 
 @EntityRepository(TaskEntity)
 export class TaskRepository extends Repository<TaskEntity> {
+  private logger = new Logger('TaskRepository')
+
   async getTasks(
     tasksFilterDto: GetTasksFilterDto,
     user: UserEntity
@@ -28,9 +31,18 @@ export class TaskRepository extends Repository<TaskEntity> {
       )
     }
 
-    const tasks = await query.getMany()
-
-    return tasks
+    try {
+      const tasks = await query.getMany()
+      return tasks
+    } catch (error) {
+      this.logger.error(
+        `Failed to get all tasks for user "${
+          user.userName
+        }". Filters: ${JSON.stringify(tasksFilterDto)}`,
+        error.stack
+      )
+      throw new InternalServerErrorException()
+    }
   }
 
   async createTask(

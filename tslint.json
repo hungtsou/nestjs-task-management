@@ -7,12 +7,14 @@
   "rules": {
     "quotemark": [true, "single"],
     "member-access": [false],
-    "ordered-imports": [true],
+    "ordered-imports": false,
     "max-line-length": [true, 150],
     "member-ordering": [false],
     "interface-name": [false],
     "arrow-parens": false,
-    "object-literal-sort-keys": false
+    "object-literal-sort-keys": false,
+    "curly": false,
+    "no-console": true
   },
   "rulesDirectory": []
 }
